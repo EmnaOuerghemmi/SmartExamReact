@@ -1,0 +1,51 @@
+/* Etudiant.css */
+
+.etudiant-container {
+    padding: 20px;
+  }
+  
+  .etudiant-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .etudiant-table th, .etudiant-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .etudiant-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .etudiant-row:hover {
+    background-color: #f1f1f1;
+  }
+  
+  button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: red;
+  }
+  
+  .btn-add {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-add:hover {
+    background-color: red;
+  }
+  
