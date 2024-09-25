@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { motion } from "framer-motion"; // Pour les animations
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { FaTrash } from "react-icons/fa";
+import "./AllNotes.css";
 
 const AllNotes = () => {
   const [notes, setNotes] = useState([]);
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [filterClass, setFilterClass] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Hook pour la navigation
+  const navigate = useNavigate();
 
   // Fonction pour récupérer toutes les notes depuis le backend
   useEffect(() => {
-    axios.get("http://localhost:8083/smartExam/notes")
+    axios
+      .get("http://localhost:8083/smartExam/notes")
       .then((response) => {
         setNotes(response.data);
-        setFilteredNotes(response.data); // Initialiser les notes filtrées avec toutes les notes
+        setFilteredNotes(response.data);
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des notes:", error);
@@ -30,18 +33,32 @@ const AllNotes = () => {
 
     if (className) {
       const filtered = notes.filter((note) => {
-        return (
-          note.moduleNom?.toLowerCase().includes(className)
-        );
+        return note.classeNom?.toLowerCase().includes(className);
       });
       setFilteredNotes(filtered);
     } else {
-      setFilteredNotes(notes); // Si aucun filtre, afficher toutes les notes
+      setFilteredNotes(notes);
+    }
+  };
+
+  // Fonction pour supprimer une note
+  const handleDeleteNote = (id) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette note ?")) {
+      axios
+        .delete(`http://localhost:8083/smartExam/notes/${id}`)
+        .then(() => {
+          setNotes(notes.filter((note) => note.id !== id));
+          setFilteredNotes(filteredNotes.filter((note) => note.id !== id));
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la suppression de la note:", error);
+          setError("Erreur lors de la suppression de la note.");
+        });
     }
   };
 
   const handleAddNoteClick = () => {
-    navigate('/addNote'); // Navigation vers la page d'ajout de note
+    navigate("/addNote");
   };
 
   if (error) {
@@ -51,23 +68,22 @@ const AllNotes = () => {
   return (
     <motion.div
       className="all-notes-container"
-      initial={{ opacity: 0, y: -50 }} // Animation d'apparition
-      animate={{ opacity: 1, y: 0 }} // Quand la page est chargée
-      transition={{ duration: 0.5 }} // Durée de la transition
-      style={{ paddingTop: "80px" }} // Décale la page vers le bas
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
       <h2>Toutes les Notes</h2>
 
       {/* Bouton pour ajouter une note */}
-      <div style={{ marginBottom: "20px" }}>
-        <button onClick={handleAddNoteClick}>
-          Ajouter une Note
-        </button>
+      <div style={{ marginBottom: "20px", textAlign: "center" }}>
+        <button onClick={handleAddNoteClick}>Ajouter une Note</button>
       </div>
 
       {/* Champ de filtrage par nom de classe */}
       <div style={{ marginBottom: "20px" }}>
-        <label htmlFor="filter">Filtrer par nom de classe: </label>
+        <label htmlFor="filter" style={{ color: "#ecf0f1" }}>
+          Filtrer par nom de classe:{" "}
+        </label>
         <input
           type="text"
           id="filter"
@@ -79,10 +95,9 @@ const AllNotes = () => {
 
       {/* Tableau pour afficher les notes */}
       <motion.table
-        initial={{ opacity: 0 }} // L'animation commence avec une opacité de 0
-        animate={{ opacity: 1 }} // Augmentation progressive de l'opacité
-        transition={{ duration: 0.5 }} // Transition douce
-        style={{ width: "100%", borderCollapse: "collapse", marginBottom: "20px" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
       >
         <thead>
           <tr>
@@ -91,7 +106,8 @@ const AllNotes = () => {
             <th>Module</th>
             <th>Examen</th>
             <th>Note</th>
-            <th>Date</th>
+           
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -99,20 +115,25 @@ const AllNotes = () => {
             filteredNotes.map((note) => (
               <motion.tr
                 key={note.id}
-                whileHover={{ scale: 1.05 }} // Animation au survol
+                whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
                 <td>{note.etudiantNomComplet || "N/A"}</td>
-                <td>{note.moduleNom || "N/A"}</td>
+                <td>{note.classeNom || "N/A"}</td>
                 <td>{note.moduleNom || "N/A"}</td>
                 <td>{note.examenNom || "N/A"}</td>
                 <td>{note.valeur}</td>
-                <td>{new Date(note.date).toLocaleDateString()}</td>
+                <td>
+                  <FaTrash
+                    style={{ cursor: "pointer", color: "red" }}
+                    onClick={() => handleDeleteNote(note.id)}
+                  />
+                </td>
               </motion.tr>
             ))
           ) : (
             <tr>
-              <td colSpan="6">Aucune note trouvée.</td>
+              <td colSpan="7">Aucune note trouvée.</td>
             </tr>
           )}
         </tbody>

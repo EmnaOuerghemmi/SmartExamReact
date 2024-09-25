@@ -8,14 +8,14 @@ import { motion } from 'framer-motion';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#ff1744', // Rouge
+      main: '#ff0000', // Rouge vif
     },
     secondary: {
-      main: '#ff3d00', // Rouge plus clair
+      main: '#535151', // Gris foncé
     },
     background: {
-      default: '#C0C0C0', // Gris foncé
-      paper: '#424242', // Gris plus clair
+      default: '#424242', // Gris plus sombre
+      paper: '#535151', // Gris foncé
     },
     text: {
       primary: '#ffffff', // Blanc
@@ -25,7 +25,7 @@ const theme = createTheme({
   typography: {
     fontFamily: 'Roboto, Arial, sans-serif',
     h4: {
-      color: '#ff1744', // Rouge pour les titres
+      color: '#ff0000', // Rouge pour les titres
     },
   },
 });
@@ -43,7 +43,6 @@ const Affectations = () => {
     const fetchAffectations = async () => {
       try {
         const response = await axios.get(`http://localhost:8083/smartExam/examens/${id}/affectations`);
-        console.log(response.data);  // Vérifiez ici la structure des données
         setAffectations(response.data);
         const uniqueSalles = [...new Set(response.data.map(affectation => affectation.salleNom))];
         setSalles(uniqueSalles);
@@ -54,10 +53,9 @@ const Affectations = () => {
         setLoading(false);
       }
     };
-  
+
     fetchAffectations();
   }, [id]);
-  
 
   const detectDoublons = async () => {
     try {
@@ -72,7 +70,9 @@ const Affectations = () => {
   const supprimerDoublon = async (affectationId) => {
     try {
       await axios.delete(`http://localhost:8083/smartExam/affectations/${affectationId}`);
+      // Mettre à jour la liste des affectations après suppression
       setAffectations(affectations.filter(affectation => affectation.id !== affectationId));
+      // Mettre à jour la liste des doublons après suppression
       setDoublons(doublons.filter(doublon => doublon.id !== affectationId));
     } catch (error) {
       setError('Erreur lors de la suppression de l\'affectation.');
@@ -93,23 +93,20 @@ const Affectations = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container 
-      
-        style={{ 
-          padding: '20px', 
-          marginTop: '40px', 
-          backgroundColor: theme.palette.background.default, 
-          borderRadius: '8px', 
-          minHeight: '100vh',  // Assurer que le conteneur prend au moins toute la hauteur visible
-           marginLeft: '-270px',
-          
-          display: 'flex', 
-         
-          flexDirection: 'column' 
+      <Container
+        style={{
+          padding: '20px',
+          marginTop: '40px',
+          backgroundColor: theme.palette.background.default,
+          borderRadius: '8px',
+          minHeight: '100vh',
+          marginLeft: '-270px',
+          display: 'flex',
+          flexDirection: 'column'
         }}
       >
         <Typography variant="h4" gutterBottom>Affectations pour l'examen</Typography>
-        
+
         <Select
           value={selectedSalle}
           onChange={(e) => setSelectedSalle(e.target.value)}
@@ -126,10 +123,10 @@ const Affectations = () => {
           variant="contained"
           color="primary"
           onClick={detectDoublons}
-          style={{ marginBottom: '10px' ,width: '250px'}}
+          style={{ marginBottom: '10px', width: '250px' }}
           component={motion.div}
-          whileHover={{ scale: 1 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05, backgroundColor: '#ff3030' }}
+          whileTap={{ scale: 0.95 }}
         >
           Détecter les Doublons
         </Button>
@@ -143,18 +140,16 @@ const Affectations = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
               style={{
-                backgroundColor: isDoublon(affectation) ? 'rgba(100, 0, 0, 0.2)' : theme.palette.background.paper,
+                backgroundColor: isDoublon(affectation) ? 'rgba(255, 0, 0, 0.2)' : theme.palette.background.paper,
                 marginBottom: '10px',
                 borderRadius: '8px'
               }}
             >
-             <ListItemText
-  primary={`Étudiant : ${affectation.etudiant?.prenom || 'N/A'} ${affectation.etudiant?.nom || 'N/A'}`}
-  secondary={`Salle : ${affectation.salleNom || 'N/A'}`}
-  style={{ color: theme.palette.text.primary }}
-/>
-
-
+              <ListItemText
+                primary={`Étudiant : ${affectation.etudiant?.prenom || 'N/A'} ${affectation.etudiant?.nom || 'N/A'}`}
+                secondary={`Salle : ${affectation.salleNom || 'N/A'}`}
+                style={{ color: theme.palette.text.primary }}
+              />
               {isDoublon(affectation) && (
                 <IconButton
                   edge="end"
