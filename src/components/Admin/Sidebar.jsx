@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './Sidebar.css'; 
 import logoImage from '../../assets/images/rijXG1C__400x400-removebg-preview (1).png';
 import navConfig from '../../Nav';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTachometerAlt, faUserGraduate, faChalkboardTeacher, faDoorClosed, faSignOutAlt, faClipboardList, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = () => {
   const [openGroup, setOpenGroup] = useState(null);
@@ -10,9 +12,21 @@ const Sidebar = () => {
     setOpenGroup(openGroup === name ? null : name);
   };
 
+  const iconMapping = {
+    Dashboard: faTachometerAlt,
+    Etudiants: faUserGraduate,
+    Classes: faChalkboardTeacher,
+    Salle: faDoorClosed,
+    "Affectation examens": faClipboardList,
+    Notes: faExclamationTriangle,
+    Déconnexion: faSignOutAlt
+  };
+
   const renderNavItems = (items) =>
     items.map((item, index) => {
-      if (item.items) { // Vérifie si l'élément a des sous-éléments
+      const Icon = iconMapping[item.name]; // Associer une icône au nom
+
+      if (item.items) { // Si l'élément a des sous-éléments
         const isOpen = openGroup === item.name;
         return (
           <li key={index} className="nav-group">
@@ -20,6 +34,7 @@ const Sidebar = () => {
               className="nav-group-toggle"
               onClick={() => handleToggle(item.name)}
             >
+              {Icon && <FontAwesomeIcon icon={Icon} className="nav-icon" />} 
               <span>{item.name}</span>
             </button>
             {isOpen && (
@@ -27,7 +42,7 @@ const Sidebar = () => {
                 {item.items.map((subItem, subIndex) => (
                   <li key={subIndex}>
                     <a href={subItem.to}>
-                      {subItem.name}
+                      <span>{subItem.name}</span>
                     </a>
                   </li>
                 ))}
@@ -39,7 +54,8 @@ const Sidebar = () => {
       return (
         <li key={index}>
           <a href={item.to}>
-            {item.name}
+            {Icon && <FontAwesomeIcon icon={Icon} className="nav-icon" />} 
+            <span>{item.name}</span>
           </a>
         </li>
       );
@@ -55,7 +71,6 @@ const Sidebar = () => {
           {renderNavItems(navConfig)}
         </ul>
       </nav>
-     
     </aside>
   );
 }

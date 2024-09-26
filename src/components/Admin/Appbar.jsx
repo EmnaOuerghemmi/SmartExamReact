@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -52,14 +50,22 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function Appbar() {
+export default function Appbar({ onMenuClick, sidebarVisible }) {
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: '#535151',   marginLeft: '250px',width: 'calc(100% - 250px)' }}>
-      <Toolbar sx={{ width: '90%' , maxWidth: '100%'}}>
+    <AppBar 
+      position="fixed" 
+      sx={{ 
+        backgroundColor: '#535151', 
+        marginLeft: sidebarVisible ? '250px' : '0px', 
+        width: sidebarVisible ? 'calc(100% - 250px)' : '100%' 
+      }}
+    >
+      <Toolbar sx={{ width: '90%' , maxWidth: '100%' }}>
         <IconButton
           edge="start"
           color="inherit"
           aria-label="menu"
+          onClick={onMenuClick}  // Gère le clic sur l'icône de menu
           sx={{ mr: 2 }}
         >
           <MenuIcon />

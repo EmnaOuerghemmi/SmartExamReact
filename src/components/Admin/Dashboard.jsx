@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, Grid, Typography, Box } from '@mui/material';
+import { Card, Grid, Typography, Box, Container } from '@mui/material';
 import { motion } from 'framer-motion';
+import { Doughnut } from 'react-chartjs-2';
+import 'chart.js/auto'; // Required for Chart.js to work with React
 
 const Dashboard = () => {
-    const [stats, setStats] = useState([]);                                                                             
+    const [stats, setStats] = useState([]);
+    const [anomalyData, setAnomalyData] = useState(null);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -16,11 +19,34 @@ const Dashboard = () => {
             }
         };
 
+        const fetchAnomalyStats = async () => {
+            try {
+                const response = await axios.get('http://localhost:8083/smartExam/anomalies/statistiques');
+                setAnomalyData(response.data);
+            } catch (error) {
+                console.error('Error fetching anomaly statistics:', error);
+            }
+        };
+
         fetchStats();
+        fetchAnomalyStats();
     }, []);
 
+    // Prepare chart data for anomalies
+    const chartData = anomalyData ? {
+        labels: Object.keys(anomalyData), // ["Étudiant absent(e)", "Note augmentée"]
+        datasets: [
+            {
+                label: 'Anomalies',
+                data: Object.values(anomalyData), // [percentage of "Étudiant absent(e)", percentage of "Note augmentée"]
+                backgroundColor: ['#ff6384', '#36a2eb'], // Colors for the chart
+                hoverBackgroundColor: ['#ff6384', '#36a2eb'],
+            },
+        ],
+    } : null;
+
     return (
-        <Box sx={{ padding: '20px' }}>
+        <Box sx={{ padding: '20px', margin:'80px' }}>
             <Typography variant="h4" gutterBottom>
                 Dashboard
             </Typography>
@@ -54,6 +80,34 @@ const Dashboard = () => {
                     </Grid>
                 ))}
             </Grid>
+
+            {/* Circular Chart for Anomalies */}
+            {chartData && (
+                <Container
+                    sx={{
+                        backgroundColor: '#f5f5f5',
+                        marginTop: '40px',
+                        padding: '20px',
+                        backgroundColor: '#fff',
+                        borderRadius: '12px',
+                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)',
+                        maxWidth: '400px', // Controls the width of the container
+                    }}
+                >
+                    <Typography variant="h5" gutterBottom align="center">
+                        Anomalie Statistics
+                    </Typography>
+                    <Box
+                        sx={{
+                            width: '300px', // Reduce the size of the chart
+                            height: '300px',
+                            margin: '0 auto', // Center the chart within the container
+                        }}
+                    >
+                        <Doughnut data={chartData} />
+                    </Box>
+                </Container>
+            )}
         </Box>
     );
 };

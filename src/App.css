@@ -10,11 +10,26 @@
   flex: 1;
 }
 
+
 .main-content {
-  flex: 1;
-  padding: 20px;
+  display: flex;
+  width: 100%;
   background-color: #f9f9f9;
+
 }
+
+
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.sidebar-hidden {
+  display: none;
+}
+
+
 
 .admin-header {
   background-color: #333;

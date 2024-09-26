@@ -59,14 +59,14 @@ const AddNote = () => {
   return (
     <Container maxWidth="sm">
       {/* Box with marginTop to avoid being hidden by AppBar */}
-      <Box sx={{ marginTop: '100px', backgroundColor: '#1e1e1e', padding: '20px', borderRadius: '8px' }}>
-        <Typography variant="h4" gutterBottom sx={{ color: '#f44336', textAlign: 'center' }}>
+      <Box sx={{ marginTop: '100px', backgroundColor: '#535151', padding: '20px', borderRadius: '8px' }}>
+      <Typography variant="h4" gutterBottom sx={{ color: '#ffffff', textAlign: 'center' }}>
           Ajouter une Note
         </Typography>
 
         <form onSubmit={handleSubmit}>
           <FormControl fullWidth margin="normal">
-            <InputLabel id="etudiant-label" sx={{ color: '#f44336' }}>Étudiant</InputLabel>
+            <InputLabel id="etudiant-label" sx={{ color: '#ffffff' }}>Étudiant</InputLabel>
             <Select
               labelId="etudiant-label"
               value={etudiantId}
@@ -82,7 +82,7 @@ const AddNote = () => {
           </FormControl>
 
           <FormControl fullWidth margin="normal">
-            <InputLabel id="examen-label" sx={{ color: '#f44336' }}>Examen</InputLabel>
+            <InputLabel id="examen-label" sx={{ color: '#ffffff' }}>Examen</InputLabel>
             <Select
               labelId="examen-label"
               value={examenId}
@@ -98,7 +98,7 @@ const AddNote = () => {
           </FormControl>
 
           <FormControl fullWidth margin="normal">
-            <InputLabel id="module-label" sx={{ color: '#f44336' }}>Module</InputLabel>
+            <InputLabel id="module-label" sx={{ color: '#ffffff' }}>Module</InputLabel>
             <Select
               labelId="module-label"
               value={moduleId}
@@ -114,7 +114,7 @@ const AddNote = () => {
           </FormControl>
 
           <FormControl fullWidth margin="normal">
-            <InputLabel id="classe-label" sx={{ color: '#f44336' }}>Classe</InputLabel>
+            <InputLabel id="classe-label" sx={{ color: '#ffffff' }}>Classe</InputLabel>
             <Select
               labelId="classe-label"
               value={classeId}
@@ -136,7 +136,7 @@ const AddNote = () => {
             value={valeur}
             onChange={(e) => setValeur(e.target.value)}
             margin="normal"
-            sx={{ backgroundColor: '#333', color: '#fff', label: { color: '#535151' }, input: { color: '#fff' } }}
+            sx={{ backgroundColor: '#333', color: '#fff', label: { color: '#ffffff' }, input: { color: '#fff' } }}
           />
 
           <Button type="submit" variant="contained" fullWidth sx={{ backgroundColor: '#f44336', color: '#fff' }}>

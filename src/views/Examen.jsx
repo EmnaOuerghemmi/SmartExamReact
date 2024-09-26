@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { List, ListItem, ListItemText, Typography, Button, CircularProgress, ThemeProvider, createTheme, Container } from '@mui/material';
+import { List, ListItem, ListItemText, Typography, Button, CircularProgress, IconButton, ThemeProvider, createTheme, Container } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { motion } from 'framer-motion';
 
 const theme = createTheme({
@@ -62,6 +63,10 @@ const Examen = () => {
     navigate(`/examens/${id}/create-affectation`);
   };
 
+  const handleAddExamen = () => {
+    navigate('/addExamen'); // Redirection vers la page d'ajout d'examen
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container
@@ -74,6 +79,19 @@ const Examen = () => {
         }}
       >
         <Typography variant="h4" gutterBottom>Liste des Examens</Typography>
+
+        {/* Icône d'ajout pour rediriger vers l'ajout d'examen */}
+        <IconButton
+          color="primary"
+          onClick={handleAddExamen}
+          style={{ marginBottom: '20px' }}
+          component={motion.div}
+          whileHover={{ scale: 1.2 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <AddCircleIcon fontSize="large" />
+        </IconButton>
+
         <List component={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
           {examens.map((examen) => (
             <ListItem
